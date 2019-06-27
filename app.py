@@ -55,7 +55,7 @@ class Votacao(db.Model):
     sala = db.relationship('Sala', backref='role')
     
     def __repr__ (self):
-        return '<id: %s>' % self.id
+        return '<id: %r>' % self.id
 
 class Sala(db.Model):
     __tablename__="Sala"
@@ -66,7 +66,7 @@ class Sala(db.Model):
     vot_id = db.Column(db.String(5), db.ForeignKey('Votacao.id'))
     
     def __repr__ (self):
-        return '<id: %s>' % self.id
+        return '<id: %r>' % self.id
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -74,6 +74,7 @@ def index():
     
     if form.validate_on_submit():
         db.session.add(Sala(id=str(len(Sala.query.all())+1), serie=form.serie.data, turma=form.turma.data))
+        db.session.commit()
         return redirect(url_for('index'))
     
     return render_template('index.html', form=form)
